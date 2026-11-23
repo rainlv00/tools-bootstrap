@@ -13,7 +13,7 @@ $BaseUrls = @(
 )
 $ZipName = 'bundle.zip'
 $SkillName = '清单整理'
-$Ver = '2.2'
+$Ver = '2.3'
 
 $NoReport = ($env:CBQ_NOREPORT -eq '1')
 
