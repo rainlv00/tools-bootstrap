@@ -94,12 +94,19 @@ if ($env:CBQ_DATA) {
 if (-not (Test-Path $zipPath)) {
     if (-not $urls) { $urls = $BaseUrls | ForEach-Object { "$($_)/$ZipName" } }
     $ok = $false
-    foreach ($u in $urls) {
-        try {
-            Step "下载 $u"
-            Invoke-WebRequest -Uri $u -OutFile $zipPath -UseBasicParsing -TimeoutSec 30
-            if ((Get-Item $zipPath).Length -gt 1000) { $ok = $true; break }
-        } catch { Step "  失败：$($_.Exception.Message)" }
+    foreach ($pass in 1..2) {
+        if ($pass -eq 2) {
+            Step '代理不可用，改用直连重试'
+            try { [System.Net.WebRequest]::DefaultWebProxy = $null } catch { }
+        }
+        foreach ($u in $urls) {
+            try {
+                Step "下载 $u"
+                Invoke-WebRequest -Uri $u -OutFile $zipPath -UseBasicParsing -TimeoutSec 30
+                if ((Get-Item $zipPath).Length -gt 1000) { $ok = $true; break }
+            } catch { Step "  失败：$($_.Exception.Message)" }
+        }
+        if ($ok) { break }
     }
     if (-not $ok) { Fail 'E10 下载失败。检查网络（公司网络常拦 GitHub），或让对方直接把 bundle.zip 发你。' 'E10' }
 }
