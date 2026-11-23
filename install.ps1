@@ -6,14 +6,16 @@ $ProgressPreference = 'SilentlyContinue'
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch {}
 
-$BaseUrls = @(
-    'https://raw.githubusercontent.com/rainlv00/tools-bootstrap/main',
-    'https://cdn.jsdelivr.net/gh/rainlv00/tools-bootstrap@main',
-    'https://gcore.jsdelivr.net/gh/rainlv00/tools-bootstrap@main'
-)
-$ZipName = 'bundle.zip'
 $SkillName = '清单整理'
 $Ver = '2.3'
+$ZipName = 'bundle.zip'
+
+# 包地址按版本 tag 取，避免 CDN 把 @main 缓存成旧包
+$BaseUrls = @(
+    "https://cdn.jsdelivr.net/gh/rainlv00/tools-bootstrap@v$Ver",
+    "https://raw.githubusercontent.com/rainlv00/tools-bootstrap/main",
+    "https://gcore.jsdelivr.net/gh/rainlv00/tools-bootstrap@v$Ver"
+)
 
 $NoReport = ($env:CBQ_NOREPORT -eq '1')
 
