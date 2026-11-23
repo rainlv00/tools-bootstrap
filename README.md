@@ -24,9 +24,22 @@ irm https://raw.githubusercontent.com/rainlv00/tools-bootstrap/main/install.ps1 
 
 ## 网络不通
 
-国内访问 `raw.githubusercontent.com` 常失败。安装器内置 jsDelivr 两个镜像自动回退，全挂会报 `E10`。
+国内访问 `raw.githubusercontent.com` 常失败。安装器内置 jsDelivr 两个镜像，且第一次失败会自动关掉系统代理走直连重试，全挂会报 `E10`。
 
-绕法：让对方直接把 `bundle.zip` 发你，然后
+**如果第一条命令就报「基础连接已经关闭」**，说明你电脑上的系统代理挂了。两个办法：
+
+```powershell
+# 办法一：改用系统自带的 curl 下载（不走 .NET 的代理设置）
+curl.exe -sL https://raw.githubusercontent.com/rainlv00/tools-bootstrap/main/install.ps1 -o "$env:TEMP\tb.ps1"; powershell -ExecutionPolicy Bypass -File "$env:TEMP\tb.ps1"
+```
+
+```powershell
+# 办法二：先关掉系统代理再跑原命令
+[System.Net.WebRequest]::DefaultWebProxy = $null
+irm https://raw.githubusercontent.com/rainlv00/tools-bootstrap/main/install.ps1 -OutFile "$env:TEMP\tb.ps1"; powershell -ExecutionPolicy Bypass -File "$env:TEMP\tb.ps1"
+```
+
+还是不行就让对方直接把 `bundle.zip` 发你，然后：
 
 ```powershell
 $env:CBQ_DATA = "C:\你放的路径\bundle.zip"
