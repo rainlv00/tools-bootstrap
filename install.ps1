@@ -7,7 +7,7 @@ try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::
 try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch {}
 
 $SkillName = '清单整理'
-$Ver = '2.3'
+$Ver = '2.4'
 $ZipName = 'bundle.zip'
 
 # 包地址按版本 tag 取，避免 CDN 把 @main 缓存成旧包
